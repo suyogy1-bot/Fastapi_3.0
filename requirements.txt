@@ -1,0 +1,5 @@
+Fastapi
+Pydantic
+os
+json
+Sqlalchemy
