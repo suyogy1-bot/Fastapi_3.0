@@ -92,3 +92,4 @@ class StudentResponse(BaseModel):
     city: str
     batch: str
 
+# id should autoincrement. 
