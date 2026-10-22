@@ -32,6 +32,33 @@ class StudentResponse(BaseModel):
     city: str = Field(min_length=2, max_length=50)
 
 
+@app.post("/students", response_model=StudentResponse)
+def create_student(new_student: StudentCreate):
+    students = load_student()
+    for student in students:
+        if student['email'].lower() == new_student.email:
+            raise HTTPException(status_code=409, detail="email already exists")
+
+        newId = 0
+        for student in students:
+            newId = max(newId, student["id"])
+        student = {
+            "id": newId + 1,
+            "name": new_student.name, 
+            "email": new_student.email,
+            "age": new_student.age,
+            "course": new_student.course,
+            "city": new_student.city
+        }
+
+        students.append(student)
+        save_students(students)
+        return student
+
+
+
+
+
 @app.get("/students", response_model=list[StudentResponse])
 def get_all_students(
     course: str | None = Query(default=None, min_length=2, max_length=50)
@@ -92,4 +119,3 @@ class StudentResponse(BaseModel):
     city: str
     batch: str
 
-# id should autoincrement. 
